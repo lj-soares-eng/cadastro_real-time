@@ -82,8 +82,18 @@ export class UsersService {
   }
 
   async remove(id: number) {
-    return this.prisma.user.delete({
-      where: { id },
-    });
+    try {
+      await this.prisma.user.delete({
+        where: { id },
+      });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2025'
+      ) {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+      throw e;
+    }
   }
 }

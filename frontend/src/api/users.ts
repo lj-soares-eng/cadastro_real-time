@@ -59,3 +59,16 @@ export async function updateUser(
 
   return data as RegisterSuccess
 }
+
+export async function deleteUser(userId: number): Promise<void> {
+  const res = await apiFetch(`/users/${userId}`, {
+    method: 'DELETE',
+  })
+
+  if (!res.ok && res.status !== 204) {
+    const data: unknown = await res.json().catch(() => ({}))
+    throw new Error(
+      formatApiError(data as { message?: string | string[] }),
+    )
+  }
+}

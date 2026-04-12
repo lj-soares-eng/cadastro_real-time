@@ -1,91 +1,35 @@
-import { useState, type FormEvent } from 'react'
 import AuthTextField from './AuthTextField'
-import { type FieldErrors, validateProfileForm } from '../validation/profileForm'
+import { type FieldErrors } from '../validation/profileForm'
 import { NAME_MAX } from '../validation/validators'
-import { registerUser } from '../api/users'
-import AlertMessage from './AlertMessage'
-import { Link } from 'react-router-dom'
+import type { FormEventHandler } from 'react'
 
-/* Componente RegisterProfileForm */
-export default function RegisterProfileForm() {
-  /* Estados */
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
-  const [formError, setFormError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+/* Props do componente RegisterProfileForm */
+type RegisterProfileFormProps = {
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
+  fieldErrors: FieldErrors
+  isSubmitting: boolean
+  onFieldChange: (field: 'name' | 'email' | 'password' | 'confirmPassword', value: string) => void
+  onSubmit: FormEventHandler<HTMLFormElement>
+}
 
-  /* Funcao para submeter o formulario */
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    setFormError(null)
-    setSuccessMessage(null)
+/* Componente de formulario de registro de perfil */
+export default function RegisterProfileForm({
+  name,
+  email,
+  password,
+  confirmPassword,
+  fieldErrors,
+  isSubmitting,
+  onFieldChange,
+  onSubmit,
+}: RegisterProfileFormProps){
 
-    const errors = validateProfileForm(
-      { name, email, password, confirmPassword },
-      'register',
-    )
-    setFieldErrors(errors)
-    if (Object.keys(errors).length > 0) {
-      return
-    }
-
-    /* Setando o estado de submissao */
-    setIsSubmitting(true)
-    void registerUser({
-      name: name.trim().replace(/\s+/g, ' '),
-      email: email.trim(),
-      password,
-    })
-      .then(() => {
-        setSuccessMessage('Conta criada com sucesso. Você já pode entrar.')
-        setPassword('')
-        setConfirmPassword('')
-      })
-      .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : 'Não foi possível cadastrar.'
-        setFormError(message)
-      })
-      .finally(() => {
-        setIsSubmitting(false)
-      })
-  }
-
-  /* Funcao para atualizar o campo */
-  function updateField<K extends keyof FieldErrors>(
-    value: string,
-    setValue: (next: string) => void,
-    key: K,
-  ) {
-    setValue(value)
-    if (fieldErrors[key]) {
-      setFieldErrors((prev) => ({ ...prev, [key]: undefined }))
-    }
-  }
-  
   /* Retorno do componente */
   return (
-    <>
-      {/* Mensagem de sucesso */}
-      {successMessage ? (
-        <AlertMessage variant="success">
-          {successMessage}{' '}
-          <Link className="auth-link" to="/login">
-            Ir para o login
-          </Link>
-        </AlertMessage>
-      ) : null}
-
-    {/* Mensagem de erro */}
-    {formError ? (
-    <AlertMessage variant="error">{formError}</AlertMessage>
-        ) : null}
-
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
+    <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
     {/* Campo de nome */}
     <AuthTextField
       id="register-name"
@@ -93,7 +37,7 @@ export default function RegisterProfileForm() {
       name="name"
       autoComplete="name"
       value={name}
-      onValueChange={(value) => updateField(value, setName, 'name')}
+      onValueChange={(value) => onFieldChange('name', value)}
       error={fieldErrors.name}
       placeholder="Seu nome"
       maxLength={NAME_MAX + 10}
@@ -107,7 +51,7 @@ export default function RegisterProfileForm() {
       name="email"
       autoComplete="email"
       value={email}
-      onValueChange={(value) => updateField(value, setEmail, 'email')}
+      onValueChange={(value) => onFieldChange('email', value)}
       error={fieldErrors.email}
       placeholder="user@provider.com"
     />
@@ -120,7 +64,7 @@ export default function RegisterProfileForm() {
       name="password"
       autoComplete="new-password"
       value={password}
-      onValueChange={(value) => updateField(value, setPassword, 'password')}
+      onValueChange={(value) => onFieldChange('password', value)}
       error={fieldErrors.password}
       placeholder="Mínimo 6 caracteres"
     />
@@ -134,7 +78,7 @@ export default function RegisterProfileForm() {
       autoComplete="new-password"
       value={confirmPassword}
       onValueChange={(value) =>
-        updateField(value, setConfirmPassword, 'confirmPassword')
+        onFieldChange('confirmPassword', value)
       }
       error={fieldErrors.confirmPassword}
       placeholder="Repita a senha"
@@ -149,6 +93,5 @@ export default function RegisterProfileForm() {
       {isSubmitting ? 'Cadastrando…' : 'Criar conta'}
     </button>
   </form>
-  </>
   )
 }

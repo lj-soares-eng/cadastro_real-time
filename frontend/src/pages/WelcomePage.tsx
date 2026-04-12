@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchMe, logoutRequest } from '../api/auth'
 import { deleteUser } from '../api/users'
-import { authCardClass, authShellClass, authSubmitClass, authTitleClass } from '../authStyles'
+import AlertMessage from '../components/AlertMessage'
 
 /* Pagina de boas vindas */
 export default function WelcomePage() {
@@ -81,9 +81,9 @@ export default function WelcomePage() {
   /* Renderizacao do componente */
   if (loading || userName === null) {
     return (
-      <div className={authShellClass}>
-        <div className={`${authCardClass} max-w-lg`}>
-          <p className="text-center text-[#5a6272] dark:text-[#9aa3b5]">
+      <div className="auth-shell">
+        <div className="auth-card max-w-lg">
+          <p className="text-muted-center">
             Carregando…
           </p>
         </div>
@@ -92,23 +92,18 @@ export default function WelcomePage() {
   }
 
   return (
-    <div className={authShellClass}>
-      <div className={`${authCardClass} max-w-lg`}>
-        <h1 className={authTitleClass}>Bem vindo, {userName}!</h1>
+    <div className="auth-shell">
+      <div className="auth-card max-w-lg">
+        <h1 className="auth-title">Bem vindo, {userName}!</h1>
         {/* Mensagem de erro */}
         {formError ? (
-          <p
-            className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-800 dark:text-red-200"
-            role="alert"
-          >
-            {formError}
-          </p>
+          <AlertMessage variant="error">{formError}</AlertMessage>
         ) : null}
         {/* Botoes de perfil e deletar conta */}
         <div className="mt-6 flex flex-col gap-3">
           {/* Botao de editar perfil */}
           <button
-            className={authSubmitClass}
+            className="btn-primary"
             onClick={() => navigate('/profile/edit')}
             type="button"
           >
@@ -116,7 +111,7 @@ export default function WelcomePage() {
           </button>
           {/* Botao de deletar conta */}
           <button
-            className={`${authSubmitClass} bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-red-500 dark:hover:bg-red-400`}
+            className="btn-danger is-disabled"
             onClick={handleDeleteAccount}
             type="button"
             disabled={isDeleting}
@@ -125,7 +120,7 @@ export default function WelcomePage() {
           </button>
           {/* Botao de sair */}
           <button
-            className={`${authSubmitClass} bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-400`}
+            className="btn-muted"
             onClick={() => void handleLogout()}
             type="button"
           >

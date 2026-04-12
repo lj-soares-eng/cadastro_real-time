@@ -4,15 +4,6 @@ import AlertMessage from '../components/AlertMessage'
 import AuthTextField from '../components/AuthTextField'
 import { registerUser } from '../api/users'
 import {
-  authCardClass,
-  authFooterClass,
-  authLinkClass,
-  authShellClass,
-  authSubmitClass,
-  authSubtitleClass,
-  authTitleClass,
-} from '../authStyles'
-import {
   NAME_MAX,
   type FieldErrors,
   validateProfileForm,
@@ -78,17 +69,17 @@ export default function RegisterPage() {
 
   /* Renderizacao do componente */
   return (
-    <div className={authShellClass}>
-      <div className={`${authCardClass} max-w-105`}>
-        <h1 className={authTitleClass}>Registrar-se</h1>
-        <p className={authSubtitleClass}>
+    <div className="auth-shell">
+      <div className="auth-card max-w-105">
+        <h1 className="auth-title">Registrar-se</h1>
+        <p className="auth-subtitle">
           Preencha os dados para criar sua conta.
         </p>
 
         {successMessage ? (
           <AlertMessage variant="success">
             {successMessage}{' '}
-            <Link className={authLinkClass} to="/login">
+            <Link className="auth-link" to="/login">
               Ir para o login
             </Link>
           </AlertMessage>
@@ -150,7 +141,7 @@ export default function RegisterPage() {
           />
 
           <button
-            className={`${authSubmitClass} disabled:cursor-not-allowed disabled:opacity-60`}
+            className="btn-primary is-disabled"
             type="submit"
             disabled={isSubmitting}
           >
@@ -158,8 +149,8 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <p className={authFooterClass}>
-          Já tem conta? <Link className={authLinkClass} to="/login">Entrar</Link>
+        <p className="auth-footer">
+          Já tem conta? <Link className="auth-link" to="/login">Entrar</Link>
         </p>
       </div>
     </div>

@@ -1,5 +1,3 @@
-import { authInputClass } from '../authStyles'
-
 type AuthTextFieldProps = {
   id: string
   label: string
@@ -11,12 +9,6 @@ type AuthTextFieldProps = {
   error?: string
   placeholder?: string
   maxLength?: number
-}
-
-function fieldRingClass(hasError: boolean): string {
-  return hasError
-    ? 'border-red-600 dark:border-red-400 focus:border-red-600 focus:ring-red-600/30 dark:focus:border-red-400 dark:focus:ring-red-400/30'
-    : ''
 }
 
 export default function AuthTextField({
@@ -37,14 +29,14 @@ export default function AuthTextField({
   return (
     <div className="flex flex-col gap-1.5">
       <label
-        className="text-sm font-medium text-[#141824] dark:text-[#eef0f5]"
+        className="auth-label"
         htmlFor={id}
       >
         {label}
       </label>
       <input
         id={id}
-        className={`${authInputClass} ${fieldRingClass(hasError)}`}
+        className={`auth-input ${hasError ? 'has-error' : ''}`}
         type={type}
         name={name}
         autoComplete={autoComplete}
@@ -56,7 +48,7 @@ export default function AuthTextField({
         aria-describedby={hasError ? errorId : undefined}
       />
       {error ? (
-        <p id={errorId} className="text-sm text-red-600 dark:text-red-400">
+        <p id={errorId} className="field-error-text">
           {error}
         </p>
       ) : null}

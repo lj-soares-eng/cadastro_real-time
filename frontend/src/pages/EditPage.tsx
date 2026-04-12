@@ -1,13 +1,5 @@
 import { Link } from 'react-router-dom'
 import AlertMessage from '../components/AlertMessage'
-import {
-  authCardClass,
-  authFooterClass,
-  authLinkClass,
-  authShellClass,
-  authSubtitleClass,
-  authTitleClass,
-} from '../authStyles'
 import EditProfileForm from '../components/EditProfileForm'
 import { useEditProfileForm } from '../validation/useEditProfile'
 
@@ -28,9 +20,9 @@ export default function EditPage() {
 
   if (loading) {
     return (
-      <div className={authShellClass}>
-        <div className={`${authCardClass} max-w-105`}>
-          <p className="text-center text-[#5a6272] dark:text-[#9aa3b5]">
+      <div className="auth-shell">
+        <div className="auth-card max-w-105">
+          <p className="text-muted-center">
             Carregando…
           </p>
         </div>
@@ -39,10 +31,10 @@ export default function EditPage() {
   }
 
   return (
-    <div className={authShellClass}>
-      <div className={`${authCardClass} max-w-105`}>
-        <h1 className={authTitleClass}>Atualizar perfil</h1>
-        <p className={authSubtitleClass}>
+    <div className="auth-shell">
+      <div className="auth-card max-w-105">
+        <h1 className="auth-title">Atualizar perfil</h1>
+        <p className="auth-subtitle">
           Atualize nome, e-mail e, se quiser, sua senha.
         </p>
 
@@ -62,8 +54,8 @@ export default function EditPage() {
           onSubmit={handleSubmit}
         />
 
-        <p className={authFooterClass}>
-          <Link className={authLinkClass} to="/welcome">
+        <p className="auth-footer">
+          <Link className="auth-link" to="/welcome">
             Voltar para a tela inicial
           </Link>
         </p>

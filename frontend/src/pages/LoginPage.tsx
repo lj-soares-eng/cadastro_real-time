@@ -4,15 +4,6 @@ import { loginRequest } from '../api/auth'
 import AlertMessage from '../components/AlertMessage'
 import AuthTextField from '../components/AuthTextField'
 import {
-  authCardClass,
-  authFooterClass,
-  authLinkClass,
-  authShellClass,
-  authSubmitClass,
-  authSubtitleClass,
-  authTitleClass,
-} from '../authStyles'
-import {
   type LoginFieldErrors,
   validateLoginForm,
 } from '../validation/profileForm'
@@ -72,10 +63,10 @@ export default function LoginPage() {
 
   return (
     /* Shell do formulário. */
-    <div className={authShellClass}>
-      <div className={`${authCardClass} max-w-md`}>
-        <h1 className={authTitleClass}>Entrar</h1>
-        <p className={authSubtitleClass}>Acesse com seu e-mail e senha.</p>
+    <div className="auth-shell">
+      <div className="auth-card max-w-md">
+        <h1 className="auth-title">Entrar</h1>
+        <p className="auth-subtitle">Acesse com seu e-mail e senha.</p>
 
         {formError ? (
           <AlertMessage variant="error">{formError}</AlertMessage>
@@ -117,19 +108,16 @@ export default function LoginPage() {
           />
 
           <button
-            /* Estilo do botão de submissão do formulário. */
-            className={`${authSubmitClass} disabled:cursor-not-allowed disabled:opacity-60`}
-            /* Tipo do botão de submissão do formulário. */
+            className="btn-primary is-disabled"
             type="submit"
-            /* Desabilita o botão de submissão do formulário se o estado de submissão for true. */
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Entrando…' : 'Entrar'}
           </button>
         </form>
 
-        <p className={authFooterClass}>
-          Não tem uma conta? <Link className={authLinkClass} to="/register">Registrar-se</Link>
+        <p className="auth-footer">
+          Não tem uma conta? <Link className="auth-link" to="/register">Registrar-se</Link>
         </p>
       </div>
     </div>

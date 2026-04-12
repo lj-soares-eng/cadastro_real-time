@@ -1,6 +1,5 @@
 import type { FormEventHandler } from 'react'
 import AuthTextField from './AuthTextField'
-import { authSubmitClass } from '../authStyles'
 import { NAME_MAX, type FieldErrors } from '../validation/profileForm'
 
 type EditProfileFormProps = {
@@ -78,7 +77,7 @@ export default function EditProfileForm({
       />
 
       <button
-        className={`${authSubmitClass} disabled:cursor-not-allowed disabled:opacity-60`}
+        className="btn-primary is-disabled"
         type="submit"
         disabled={isSubmitting}
       >

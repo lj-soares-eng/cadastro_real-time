@@ -3,7 +3,7 @@ Um pequeno projeto de cadastro de usuários para treinar minhas habilidades com 
 
 ## Env
 Esse exercício está sendo executado numa máquina Lubuntu Linux, usando banco Postgres instalado via snap,
-o app é feito em React, TypeScript e Nest com Node. O Nest está usando Express por baixo, como padrão
+o app é feito em React, Tailwind, TypeScript e Nest com Node. O Nest está usando Express por baixo, como padrão
 do framework.
 
 ## Setup do projeto

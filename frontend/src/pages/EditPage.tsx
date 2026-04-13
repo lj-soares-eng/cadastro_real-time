@@ -22,7 +22,7 @@ export default function EditPage() {
   if (loading) {
     return (
       <div className="auth-shell">
-        <div className="auth-card max-w-105">
+        <div className="auth-card auth-card-page-wide">
           <p className="text-muted-center">
             Carregando…
           </p>
@@ -34,7 +34,7 @@ export default function EditPage() {
   /* Retorno do componente */
   return (
     <div className="auth-shell">
-      <div className="auth-card max-w-105">
+      <div className="auth-card auth-card-page-wide">
         <h1 className="auth-title">Atualizar perfil</h1>
         <p className="auth-subtitle">
           Atualize nome, e-mail e, se quiser, sua senha.

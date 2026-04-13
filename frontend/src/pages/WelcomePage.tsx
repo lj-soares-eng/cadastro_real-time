@@ -1,126 +1,65 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { fetchMe, logoutRequest } from '../api/auth'
-import { deleteUser } from '../api/users'
 import AlertMessage from '../components/AlertMessage'
+import { useWelcomePage } from '../validation/useWelcomePage'
 
 /* Pagina de boas vindas */
 export default function WelcomePage() {
-  /* Estados */
-  const navigate = useNavigate()
-  const [userId, setUserId] = useState<number | null>(null)
-  const [userName, setUserName] = useState<string | null>(null)
-  const [userRole, setUserRole] = useState<string | null>(null)
-  const [formError, setFormError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isDeleting, setIsDeleting] = useState(false)
+  /* Estado do componente */
+  const {
+    loading,
+    userName,
+    userRole,
+    formError,
+    isDeleting,
+    handleLogout,
+    handleDeleteAccount,
+    goToAdmin,
+    goToEditProfile,
+  } = useWelcomePage()
 
-  /* Efeito para buscar o usuario logado */
-  useEffect(() => {
-    let cancelled = false
-    void fetchMe()
-      .then((u) => {
-        if (!cancelled) {
-          setUserId(u.id)
-          setUserName(u.name)
-          setUserRole(u.role)
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          navigate('/login', { replace: true })
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [navigate])
-
-  /* Funcao para logout */
-  async function handleLogout() {
-    try {
-      await logoutRequest()
-    } catch {
-      // mesmo com falha na API, segue para o login (cookie pode já ter expirado)
-    }
-    navigate('/login')
-  }
-
-  /* Funcao para deletar a conta */
-  function handleDeleteAccount() {
-    if (userId === null || isDeleting) {
-      return
-    }
-
-    const confirmed = window.confirm(
-      'Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.',
-    )
-    if (!confirmed) {
-      return
-    }
-
-    setFormError(null)
-    setIsDeleting(true)
-    void deleteUser(userId)
-      .then(() => {
-        navigate('/login', { replace: true })
-      })
-      .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : 'Não foi possível excluir a conta.'
-        setFormError(message)
-      })
-      .finally(() => {
-        setIsDeleting(false)
-      })
-  }
-
-  /* Renderizacao do componente */
+  /* Se o carregamento estiver ativo ou o nome do usuário for nulo, retorna um loading */
   if (loading || userName === null) {
     return (
       <div className="auth-shell">
-        <div className="auth-card max-w-lg">
-          <p className="text-muted-center">
-            Carregando…
-          </p>
+        <div className="auth-card auth-card-page-lg">
+          <p className="text-muted-center">Carregando…</p>
         </div>
       </div>
     )
   }
 
+  /* Retorno do componente */
   return (
     <div className="auth-shell">
-      <div className="auth-card max-w-lg">
-        {/* Titulo da pagina */}
+      <div className="auth-card auth-card-page-lg">
         <h1 className="auth-title">Bem vindo, {userName}!</h1>
-        {/* Mensagem de erro */}
+
+        {/* Se houver um erro, exibe uma mensagem de erro */}
         {formError ? (
           <AlertMessage variant="error">{formError}</AlertMessage>
         ) : null}
-        {/* Botão de painel de administração */}
-        <div className="mt-6 flex flex-col gap-3">
+
+        {/* Div de botões de ação */}
+        <div className="auth-actions">
+          {/* Se o usuário for ADMIN, exibe um botão de painel de administração */}
           {userRole === 'ADMIN' ? (
             <button
               className="btn-muted"
-              onClick={() => navigate('/admin')}
+              onClick={goToAdmin}
               type="button"
             >
               Painel admin
             </button>
           ) : null}
-          {/* Botao de editar perfil */}
+
+          {/* Se o usuário não for ADMIN, exibe um botão de editar perfil */}
           <button
             className="btn-primary"
-            onClick={() => navigate('/profile/edit')}
+            onClick={goToEditProfile}
             type="button"
           >
             Editar perfil
           </button>
+
           {/* Botao de deletar conta */}
           <button
             className="btn-danger is-disabled"
@@ -130,6 +69,7 @@ export default function WelcomePage() {
           >
             {isDeleting ? 'Excluindo conta…' : 'Deletar conta'}
           </button>
+          
           {/* Botao de sair */}
           <button
             className="btn-muted"

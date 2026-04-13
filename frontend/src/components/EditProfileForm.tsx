@@ -32,7 +32,7 @@ export default function EditProfileForm({
   
   /* Retorno do componente */
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+    <form className="auth-form" onSubmit={onSubmit} noValidate>
       {/* Campo de nome */}
       <AuthTextField
         id="edit-name"

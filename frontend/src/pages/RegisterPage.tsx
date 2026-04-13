@@ -21,7 +21,7 @@ export default function RegisterPage() {
   /* Renderizacao do componente */
   return (
     <div className="auth-shell">
-      <div className="auth-card max-w-105">
+      <div className="auth-card auth-card-page-wide">
         <h1 className="auth-title">Registrar-se</h1>
         <p className="auth-subtitle">
           Preencha os dados para criar sua conta.

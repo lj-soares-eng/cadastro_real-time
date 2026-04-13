@@ -98,4 +98,92 @@
   .text-muted-center {
     @apply text-center text-[#5a6272] dark:text-[#9aa3b5];
   }
+
+  /* Larguras de card (use junto de .auth-card no markup) */
+  .auth-card-page-md {
+    @apply max-w-md;
+  }
+
+  .auth-card-page-lg {
+    @apply max-w-lg;
+  }
+
+  .auth-card-page-wide {
+    @apply max-w-105;
+  }
+
+  /* Formulários auth (login, registro, edição) */
+  .auth-form {
+    @apply flex flex-col gap-4;
+  }
+
+  /* Coluna de botões (boas-vindas e similares) */
+  .auth-actions {
+    @apply mt-6 flex flex-col gap-3;
+  }
+
+  /* —— Painel admin —— */
+  .admin-page {
+    @apply mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-6;
+  }
+
+  .admin-page-header {
+    @apply flex flex-col gap-1;
+  }
+
+  .admin-page-title {
+    @apply text-2xl font-semibold text-slate-900 dark:text-[#eef0f5];
+  }
+
+  .admin-page-lede {
+    @apply text-sm text-slate-600 dark:text-[#9aa3b5];
+  }
+
+  .admin-inline-code {
+    @apply rounded bg-slate-100 px-1 dark:bg-[#2c3140] dark:text-[#eef0f5];
+  }
+
+  .admin-metrics-grid {
+    @apply grid gap-4 sm:grid-cols-2;
+  }
+
+  .admin-metric-card {
+    @apply rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-[#2c3140] dark:bg-[#181b24] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)];
+  }
+
+  .admin-metric-card--wide {
+    @apply sm:col-span-2;
+  }
+
+  .admin-metric-label {
+    @apply text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-[#9aa3b5];
+  }
+
+  .admin-metric-value {
+    @apply mt-2 text-2xl font-semibold text-slate-900 dark:text-[#eef0f5];
+  }
+
+  .admin-desc-list {
+    @apply mt-2 grid gap-2 text-sm text-slate-800 sm:grid-cols-2 dark:text-[#eef0f5];
+  }
+
+  .admin-desc-term {
+    @apply text-slate-500 dark:text-[#9aa3b5];
+  }
+
+  .admin-desc-detail {
+    @apply font-medium;
+  }
+
+  .admin-muted-paragraph {
+    @apply mt-2 text-sm text-slate-600 dark:text-[#9aa3b5];
+  }
+
+  .admin-loading-text {
+    @apply text-sm text-slate-600 dark:text-[#9aa3b5];
+  }
+
+  .admin-back-link {
+    @apply self-start text-sm text-slate-600 underline hover:text-slate-900 dark:text-[#9aa3b5] dark:hover:text-[#eef0f5];
+  }
 }

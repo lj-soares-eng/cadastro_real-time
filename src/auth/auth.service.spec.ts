@@ -4,8 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import { AuthService } from './auth.service';
 
+/* Mock para o servico de bcrypt */
 const bcryptCompareMock = jest.fn();
 
+/* Mock para o servico de bcrypt */
 jest.mock('bcrypt', () => {
   const actual = jest.requireActual<typeof import('bcrypt')>('bcrypt');
   return {
@@ -15,23 +17,28 @@ jest.mock('bcrypt', () => {
   };
 });
 
+/* Mock para o servico de prisma */
 const prismaMock = {
   user: {
     findUnique: jest.fn(),
   },
 };
 
+/* Mock para o servico de jwt */
 const jwtMock = {
   signAsync: jest.fn(),
 };
 
+/* Teste para verificar se o servico de autenticacao é definido */
 describe('AuthService', () => {
   let service: AuthService;
 
+  /* beforeEach para limpar os mocks */
   beforeEach(async () => {
     jest.clearAllMocks();
     bcryptCompareMock.mockReset();
 
+    /* Cria o modulo de teste */
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -40,10 +47,12 @@ describe('AuthService', () => {
       ],
     }).compile();
 
+    /* Obtém o serviço de autenticação */
     service = module.get<AuthService>(AuthService);
   });
 
-  it('login lança UnauthorizedException quando o usuário não existe', async () => {
+  /* Teste para verificar se o servico de autenticacao lança UnauthorizedException quando o usuário não existe */
+  it('Login lança UnauthorizedException quando o usuário não existe', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
     await expect(
@@ -57,7 +66,8 @@ describe('AuthService', () => {
     expect(bcryptCompareMock).not.toHaveBeenCalled();
   });
 
-  it('login lança UnauthorizedException quando a senha está errada', async () => {
+  /* Teste para verificar se o servico de autenticacao lança UnauthorizedException quando a senha está errada */
+  it('Login lança UnauthorizedException quando a senha está errada', async () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: 1,
       name: 'Lucas',
@@ -77,7 +87,8 @@ describe('AuthService', () => {
     expect(jwtMock.signAsync).not.toHaveBeenCalled();
   });
 
-  it('login retorna usuário sem senha e access_token com JWT mockado', async () => {
+  /* Teste para verificar se o servico de autenticacao retorna usuário sem senha e access_token com JWT mockado */
+  it('Login retorna usuário sem senha e access_token com JWT mockado', async () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: 2,
       name: 'Maria',
@@ -92,6 +103,7 @@ describe('AuthService', () => {
       password: 'correta12',
     });
 
+    /* Verifica se o resultado é o esperado */
     expect(result).toEqual({
       user: { id: 2, name: 'Maria', email: 'maria@test.com' },
       access_token: 'jwt.mocked.token',

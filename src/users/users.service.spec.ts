@@ -118,7 +118,13 @@ describe('UsersService', () => {
         email: 'lucasdejesussoares@gmail.com',
       });
 
-      expect(prismaMock.user.create).toHaveBeenCalled();
+      expect(prismaMock.user.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Lucas Soares',
+          email: 'lucasdejesussoares@gmail.com',
+          password: expect.any(String),
+        }),
+      });
     }
   );
 
@@ -168,6 +174,34 @@ describe('UsersService', () => {
         email: 'lucasdejesussoares@gmail.com',
       }),
     });
+  });
+
+  it('Update com senha envia hash ao Prisma e normaliza e-mail e nome', async () => {
+    prismaMock.user.update.mockResolvedValue({
+      id: 1,
+      name: 'trim me',
+      email: 'a@b.com',
+      password: 'hash-no-banco',
+    });
+
+    await service.update(1, {
+      password: 'novasenha12',
+      email: '  A@B.COM ',
+      name: '  trim me  ',
+    });
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: 1 },
+      data: expect.objectContaining({
+        email: 'a@b.com',
+        name: 'trim me',
+        password: expect.any(String),
+      }),
+    });
+    const sent = prismaMock.user.update.mock.calls[0][0].data as {
+      password: string;
+    };
+    expect(sent.password).not.toBe('novasenha12');
   });
 
   it('Update deve lançar ConflictException quando o e-mail já está cadastrado',

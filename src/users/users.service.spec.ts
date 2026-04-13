@@ -172,4 +172,24 @@ describe('UsersService', () => {
       expect(prismaMock.user.update).toHaveBeenCalled();
     },
   );
+
+  it('Remove deve concluir quando o Prisma deleta o usuário', async () => {
+    prismaMock.user.delete.mockResolvedValue(undefined);
+
+    await expect(service.remove(1)).resolves.toBeUndefined();
+
+    expect(prismaMock.user.delete).toHaveBeenCalledWith({
+      where: { id: 1 },
+    });
+  });
+
+  it('Remove deve lançar NotFoundException quando o usuário não existe', async () => {
+    prismaMock.user.delete.mockRejectedValue(prismaRecordNotFoundError());
+
+    await expect(service.remove(999)).rejects.toThrow(NotFoundException);
+
+    expect(prismaMock.user.delete).toHaveBeenCalledWith({
+      where: { id: 999 },
+    });
+  });
 });

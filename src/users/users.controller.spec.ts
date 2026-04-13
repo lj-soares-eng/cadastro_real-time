@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ForbiddenException } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import type { Response } from 'express';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -22,6 +23,7 @@ function authedReq(userId: number) {
       userId,
       email: 'user@test.com',
       name: 'User',
+      role: Role.USER,
     },
   } as Parameters<UsersController['update']>[2];
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -13,6 +14,7 @@ export type AccessTokenPayload = {
   sub: number;
   email: string;
   name: string;
+  role?: Role;
 };
 
 @Injectable()
@@ -30,6 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       userId: payload.sub,
       email: payload.email,
       name: payload.name,
+      role: payload.role ?? Role.USER,
     };
   }
 }

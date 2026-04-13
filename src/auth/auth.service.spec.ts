@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { AuthService } from './auth.service';
 
@@ -73,6 +74,7 @@ describe('AuthService', () => {
       name: 'Lucas',
       email: 'lucas@test.com',
       password: 'hash-no-banco',
+      role: Role.USER,
     });
     bcryptCompareMock.mockResolvedValue(false);
 
@@ -94,6 +96,7 @@ describe('AuthService', () => {
       name: 'Maria',
       email: 'maria@test.com',
       password: 'hash-no-banco',
+      role: Role.USER,
     });
     bcryptCompareMock.mockResolvedValue(true);
     jwtMock.signAsync.mockResolvedValue('jwt.mocked.token');
@@ -105,7 +108,7 @@ describe('AuthService', () => {
 
     /* Verifica se o resultado é o esperado */
     expect(result).toEqual({
-      user: { id: 2, name: 'Maria', email: 'maria@test.com' },
+      user: { id: 2, name: 'Maria', email: 'maria@test.com', role: Role.USER },
       access_token: 'jwt.mocked.token',
     });
     expect(result.user).not.toHaveProperty('password');
@@ -113,6 +116,7 @@ describe('AuthService', () => {
       sub: 2,
       email: 'maria@test.com',
       name: 'Maria',
+      role: Role.USER,
     });
   });
 });

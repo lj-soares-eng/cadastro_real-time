@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Role } from '@prisma/client';
 import type { Response } from 'express';
 import { AUTH_COOKIE_NAME, authCookieBase } from './auth.constants';
 import { AuthController } from './auth.controller';
@@ -46,7 +47,7 @@ describe('AuthController', () => {
     it('define cookie access_token com httpOnly, maxAge e secure=false fora de production', async () => {
       process.env.NODE_ENV = 'development';
       authServiceMock.login.mockResolvedValue({
-        user: { id: 1, name: 'U', email: 'user@test.com' },
+        user: { id: 1, name: 'U', email: 'user@test.com', role: Role.USER },
         access_token: 'jwt.token.mock',
       });
       const res = { cookie: jest.fn() } as unknown as Response;
@@ -54,7 +55,7 @@ describe('AuthController', () => {
       const result = await controller.login(dto, res);
 
       expect(result).toEqual({
-        user: { id: 1, name: 'U', email: 'user@test.com' },
+        user: { id: 1, name: 'U', email: 'user@test.com', role: Role.USER },
       });
       expect(res.cookie).toHaveBeenCalledWith(
         AUTH_COOKIE_NAME,
@@ -71,7 +72,7 @@ describe('AuthController', () => {
     it('define cookie com secure=true quando NODE_ENV é production', async () => {
       process.env.NODE_ENV = 'production';
       authServiceMock.login.mockResolvedValue({
-        user: { id: 2, name: 'P', email: 'p@test.com' },
+        user: { id: 2, name: 'P', email: 'p@test.com', role: Role.USER },
         access_token: 'jwt.prod',
       });
       const res = { cookie: jest.fn() } as unknown as Response;
@@ -125,12 +126,13 @@ describe('AuthController', () => {
   });
 
   describe('GET auth/me', () => {
-    it('retorna { id, email, name } a partir de req.user', () => {
+    it('retorna { id, email, name, role } a partir de req.user', () => {
       const req = {
         user: {
           userId: 42,
           email: 'me@test.com',
           name: 'Me User',
+          role: Role.ADMIN,
         },
       } as Parameters<AuthController['me']>[0];
 
@@ -138,6 +140,7 @@ describe('AuthController', () => {
         id: 42,
         email: 'me@test.com',
         name: 'Me User',
+        role: Role.ADMIN,
       });
     });
   });

@@ -28,8 +28,8 @@ async function bootstrap() {
     credentials: true,
     /* Metodos permitidos */
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    /* Headers permitidos */
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    /* Headers permitidos (Cookie para JWT httpOnly; Socket.IO polling) */
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   });
   /* Aguarda o servidor iniciar */
   await app.listen(process.env.PORT ?? 3000);

@@ -10,6 +10,7 @@ export default function WelcomePage() {
   const navigate = useNavigate()
   const [userId, setUserId] = useState<number | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -22,6 +23,7 @@ export default function WelcomePage() {
         if (!cancelled) {
           setUserId(u.id)
           setUserName(u.name)
+          setUserRole(u.role)
         }
       })
       .catch(() => {
@@ -100,7 +102,17 @@ export default function WelcomePage() {
         {formError ? (
           <AlertMessage variant="error">{formError}</AlertMessage>
         ) : null}
+        {/* Botão de painel de administração */}
         <div className="mt-6 flex flex-col gap-3">
+          {userRole === 'ADMIN' ? (
+            <button
+              className="btn-muted"
+              onClick={() => navigate('/admin')}
+              type="button"
+            >
+              Painel admin
+            </button>
+          ) : null}
           {/* Botao de editar perfil */}
           <button
             className="btn-primary"

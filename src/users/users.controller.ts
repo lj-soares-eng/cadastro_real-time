@@ -22,7 +22,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 /* Tipo de request autenticado */
 type AuthedRequest = Request & {
-  user: { userId: number; email: string; name: string };
+  user: {
+    userId: number;
+    email: string;
+    name: string;
+    role: import('@prisma/client').Role;
+  };
 };
 
 /* Controller de usuarios */

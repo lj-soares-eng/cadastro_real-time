@@ -19,7 +19,10 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 type AuthedRequest = Request & {
-  user: { userId: number; email: string; name: string };
+  user: { userId: number; 
+  email: string; 
+  name: string; 
+  role: import('@prisma/client').Role };
 };
 
 @Controller('auth')
@@ -59,9 +62,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   me(@Req() req: AuthedRequest) {
     return {
-      id: req.user.userId, 
+      id: req.user.userId,
       email: req.user.email,
       name: req.user.name,
+      role: req.user.role,
     };
   }
 }

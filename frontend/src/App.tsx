@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import AdminPage from './pages/AdminPage'
 import EditPage from './pages/EditPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -20,6 +21,8 @@ export default function App() {
         <Route path="/welcome" element={<WelcomePage />} />
         {/* Pagina de edicao de perfil */}
         <Route path="/profile/edit" element={<EditPage />} />
+        {/* Pagina de administração */}
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   )

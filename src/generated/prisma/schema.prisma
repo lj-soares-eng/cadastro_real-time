@@ -12,11 +12,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(100)
   email       String   @unique @db.VarChar(150)
   password    String   @db.VarChar(255)
+  role        Role     @default(USER)
   dataCriacao DateTime @default(now()) @map("data_criacao") @db.Timestamp(6)
 
   @@map("users")

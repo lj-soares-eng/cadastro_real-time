@@ -7,11 +7,14 @@ export type LoginPayload = {
 }
 
 // Tipo de dado para o sucesso do login
+export type UserRole = 'USER' | 'ADMIN'
+
 export type LoginSuccess = {
   user: {
     id: number
     name: string
     email: string
+    role: UserRole
   }
 }
 
@@ -41,6 +44,7 @@ export type MeResponse = {
   id: number
   name: string
   email: string
+  role: UserRole
 }
 
 /* Função para buscar no backend as informações do usuário logado. */

@@ -1,9 +1,10 @@
-import { apiFetch, formatApiError } from './client'
+import { apiBase, apiFetch, formatApiError } from './client'
 
 // Tipo de dado para o login
 export type LoginPayload = {
   email: string
   password: string
+  clientType?: 'web' | 'api'
 }
 
 // Tipo de dado para o sucesso do login
@@ -68,4 +69,23 @@ export async function logoutRequest(): Promise<void> {
       formatApiError(data as { message?: string | string[] }),
     )
   }
+}
+
+/* Dispara beacon para remover sessão ao fechar/ocultar aba. */
+export function sendSessionCloseBeacon(): void {
+  const url = `${apiBase()}/auth/session/beacon`
+  const body = 'close'
+
+  if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+    const blob = new Blob([body], { type: 'text/plain;charset=UTF-8' })
+    navigator.sendBeacon(url, blob)
+    return
+  }
+
+  void fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    keepalive: true,
+    body,
+  })
 }

@@ -17,6 +17,8 @@ describe('JwtStrategy', () => {
       email: 'jwt@user.com',
       name: 'Jwt User',
       role: Role.ADMIN,
+      jti: undefined,
+      exp: undefined,
     });
   });
 
@@ -34,6 +36,8 @@ describe('JwtStrategy', () => {
       email: 'legacy@user.com',
       name: 'Legacy',
       role: Role.USER,
+      jti: undefined,
+      exp: undefined,
     });
   });
 });

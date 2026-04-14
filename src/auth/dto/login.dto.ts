@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
 /* DTO para login */
 export class LoginDto {
@@ -19,4 +19,10 @@ export class LoginDto {
   @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
   /* Senha */
   password: string;
+
+  @IsOptional()
+  @IsIn(['web', 'api'], {
+    message: 'clientType deve ser web ou api',
+  })
+  clientType?: 'web' | 'api';
 }

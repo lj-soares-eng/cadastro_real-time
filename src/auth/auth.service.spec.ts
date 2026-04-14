@@ -3,6 +3,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
+import { ActiveSessionsService } from './active-sessions.service';
 import { AuthService } from './auth.service';
 
 /* Mock para o servico de bcrypt */
@@ -28,6 +29,13 @@ const prismaMock = {
 /* Mock para o servico de jwt */
 const jwtMock = {
   signAsync: jest.fn(),
+  decode: jest.fn(),
+  verifyAsync: jest.fn(),
+};
+
+const activeSessionsMock = {
+  registerSession: jest.fn(),
+  removeSession: jest.fn(),
 };
 
 /* Teste para verificar se o servico de autenticacao é definido */
@@ -45,6 +53,7 @@ describe('AuthService', () => {
         AuthService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: JwtService, useValue: jwtMock },
+        { provide: ActiveSessionsService, useValue: activeSessionsMock },
       ],
     }).compile();
 
@@ -100,23 +109,38 @@ describe('AuthService', () => {
     });
     bcryptCompareMock.mockResolvedValue(true);
     jwtMock.signAsync.mockResolvedValue('jwt.mocked.token');
+    jwtMock.decode.mockReturnValue({ exp: 1_700_000_000 });
 
     const result = await service.login({
       email: 'maria@test.com',
       password: 'correta12',
+      clientType: 'web',
     });
 
     /* Verifica se o resultado é o esperado */
     expect(result).toEqual({
       user: { id: 2, name: 'Maria', email: 'maria@test.com', role: Role.USER },
       access_token: 'jwt.mocked.token',
+      jti: expect.any(String),
+      exp: 1_700_000_000,
+      clientType: 'web',
     });
     expect(result.user).not.toHaveProperty('password');
-    expect(jwtMock.signAsync).toHaveBeenCalledWith({
-      sub: 2,
-      email: 'maria@test.com',
-      name: 'Maria',
-      role: Role.USER,
-    });
+    expect(jwtMock.signAsync).toHaveBeenCalledWith(
+      {
+        sub: 2,
+        email: 'maria@test.com',
+        name: 'Maria',
+        role: Role.USER,
+      },
+      expect.objectContaining({
+        jwtid: expect.any(String),
+      }),
+    );
+    expect(activeSessionsMock.registerSession).toHaveBeenCalledWith(
+      expect.any(String),
+      1_700_000_000,
+      'web',
+    );
   });
 });

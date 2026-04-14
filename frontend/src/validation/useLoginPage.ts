@@ -43,7 +43,7 @@ export function useLoginPage() {
     }
 
     setIsSubmitting(true)
-    void loginRequest({ email: email.trim(), password })
+    void loginRequest({ email: email.trim(), password, clientType: 'web' })
       .then(() => {
         navigate('/welcome')
         setPassword('')

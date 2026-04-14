@@ -8,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import type { Server } from 'socket.io';
 import type { Socket } from 'socket.io';
+import { ActiveSessionsService } from '../auth/active-sessions.service';
 import { AdminSocketAuthService } from './admin-socket-auth.service';
 import { SystemMetricsService } from './system-metrics.service';
 
@@ -38,7 +39,6 @@ export class AdminMetricsGateway
   private readonly logger = new Logger(AdminMetricsGateway.name);
   /* Intervalo de atualização das métricas */
   private metricsInterval?: ReturnType<typeof setInterval>;
-  private activeAdminSessions = 0;
 
   /* Servidor WebSocket */
   @WebSocketServer()
@@ -47,6 +47,7 @@ export class AdminMetricsGateway
   constructor(
     private readonly adminSocketAuth: AdminSocketAuthService,
     private readonly systemMetrics: SystemMetricsService,
+    private readonly activeSessions: ActiveSessionsService,
   ) {}
 
   /* Função para configurar o intervalo de atualização das métricas */
@@ -68,9 +69,11 @@ export class AdminMetricsGateway
   /* Função para emitir as métricas */
   private async emitMetrics(server: Server): Promise<void> {
     try {
+      const activeSessionsCount =
+        await this.activeSessions.cleanupAndCountActiveSessions();
       /* Obtém as métricas */
       const payload = await this.systemMetrics.sample(
-        this.activeAdminSessions,
+        activeSessionsCount,
       );
       /* Emite as métricas */
       server.emit('metrics', payload);
@@ -91,13 +94,12 @@ export class AdminMetricsGateway
       return;
     }
     client.data.adminMetricsSession = true as const;
-    this.activeAdminSessions += 1;
   }
   
   /* Função para lidar com a desconexão do cliente */
   handleDisconnect(client: Socket): void {
     if (client.data.adminMetricsSession) {
-      this.activeAdminSessions = Math.max(0, this.activeAdminSessions - 1);
+      client.data.adminMetricsSession = false;
     }
   }
 }

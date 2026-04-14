@@ -8,7 +8,7 @@ import AlertMessage from '../components/AlertMessage'
 /* Tipo de payload de métricas */
 type MetricsPayload = {
   timestamp: number
-  activeAdminConnections: number
+  activeSessions: number
   cpuPercent: number
   memory: {
     heapUsed: number
@@ -98,10 +98,8 @@ export default function AdminPage() {
       {metrics ? (
         <ul className="admin-metrics-grid">
           <li className="admin-metric-card">
-            <p className="admin-metric-label">Conexões admin (WS)</p>
-            <p className="admin-metric-value">
-              {metrics.activeAdminConnections}
-            </p>
+            <p className="admin-metric-label">Sessões ativas (Redis)</p>
+            <p className="admin-metric-value">{metrics.activeSessions}</p>
           </li>
           <li className="admin-metric-card">
             <p className="admin-metric-label">Uso de CPU (processo)</p>

@@ -5,7 +5,7 @@ import * as si from 'systeminformation';
 /* Tipo de dado para as métricas de administração */
 export type AdminMetricsPayload = {
   timestamp: number;
-  activeAdminConnections: number;
+  activeSessions: number;
   cpuPercent: number;
   memory: {
     heapUsed: number;
@@ -29,7 +29,7 @@ export class SystemMetricsService {
   private lastSampleAt = Date.now();
 
   /* Função para amostrar as métricas */
-  async sample(activeAdminConnections: number): Promise<AdminMetricsPayload> {
+  async sample(activeSessions: number): Promise<AdminMetricsPayload> {
     /* Obtém a data e hora atual */
     const now = Date.now();
     /* Obtém o delta de tempo */
@@ -100,7 +100,7 @@ export class SystemMetricsService {
     /* Retorna as métricas */
     return {
       timestamp: now,
-      activeAdminConnections,
+      activeSessions,
       cpuPercent,
       memory: {
         heapUsed: pm.heapUsed,

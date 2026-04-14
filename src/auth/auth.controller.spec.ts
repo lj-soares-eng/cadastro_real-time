@@ -10,6 +10,8 @@ import { LoginDto } from './dto/login.dto';
 const authServiceMock = {
   /* Mock para o metodo login */
   login: jest.fn(),
+  parseTokenForSession: jest.fn(),
+  removeSessionByJti: jest.fn(),
 };
 
 /* Teste de unidade para o controller de autenticacao */
@@ -69,6 +71,7 @@ describe('AuthController', () => {
       authServiceMock.login.mockResolvedValue({
         user: { id: 1, name: 'U', email: 'user@test.com', role: Role.USER },
         access_token: 'jwt.token.mock',
+        exp: 1_700_000_000,
       });
       /* Resposta do metodo login */
       const res = { cookie: jest.fn() } as unknown as Response;
@@ -101,6 +104,7 @@ describe('AuthController', () => {
       authServiceMock.login.mockResolvedValue({
         user: { id: 2, name: 'P', email: 'p@test.com', role: Role.USER },
         access_token: 'jwt.prod',
+        exp: 1_700_000_000,
       });
       /* Resposta do metodo login */
       const res = { cookie: jest.fn() } as unknown as Response;
@@ -128,11 +132,16 @@ describe('AuthController', () => {
     it('clearCookie usa nome access_token, authCookieBase e secure conforme NODE_ENV', async () => {
       /* Define o valor de NODE_ENV para production */
       process.env.NODE_ENV = 'production';
+      authServiceMock.parseTokenForSession.mockResolvedValue({ jti: 'x', exp: 1 });
       /* Resposta do metodo logout */
       const res = { clearCookie: jest.fn() } as unknown as Response;
+      const req = {
+        headers: {} as unknown as Headers,
+        cookies: { access_token: 'jwt.token' },
+      } as unknown as Parameters<AuthController['logout']>[0];
       /* Resultado do metodo logout */
 
-      await controller.logout(res);
+      await controller.logout(req, res);
 
       /* Verifica se o metodo clearCookie foi chamado */
       expect(res.clearCookie).toHaveBeenCalledWith(
@@ -148,11 +157,16 @@ describe('AuthController', () => {
     it('logout usa secure=false fora de production', async () => {
       /* Define o valor de NODE_ENV para test */
       process.env.NODE_ENV = 'test';
+      authServiceMock.parseTokenForSession.mockResolvedValue(null);
       /* Resposta do metodo logout */
       const res = { clearCookie: jest.fn() } as unknown as Response;
+      const req = {
+        headers: {},
+        cookies: {},
+      } as Parameters<AuthController['logout']>[0];
       /* Resultado do metodo logout */
 
-      await controller.logout(res);
+      await controller.logout(req, res);
 
       /* Verifica se o metodo clearCookie foi chamado */
       expect(res.clearCookie).toHaveBeenCalledWith(

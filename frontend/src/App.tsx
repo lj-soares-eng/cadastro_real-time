@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import SessionHeartbeat from './components/SessionHeartbeat'
 import AdminPage from './pages/AdminPage'
 import EditPage from './pages/EditPage'
 import LoginPage from './pages/LoginPage'
@@ -10,6 +11,7 @@ export default function App() {
   /* Renderizacao do componente */
   return (
     <BrowserRouter>
+      <SessionHeartbeat />
       <Routes>
         {/* Rotas da aplicacao, redireciona para login se nao estiver logado */}
         <Route path="/" element={<Navigate to="/login" replace />} />

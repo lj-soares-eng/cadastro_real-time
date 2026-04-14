@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { type FieldErrors, validateProfileForm } from "./profileForm"
 import { registerUser } from "../api/users"
 
+/* Tipo de dado para os campos editaveis */
 type EditableField = 'name' | 'email' | 'password' | 'confirmPassword'
 
 /* Hook para o formulário de registro de perfil */
@@ -23,6 +24,7 @@ export function useRegisterProfile() {
   /* Estado para o envio do formulário */
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  /* Função para mudar o valor de um campo */
   const fieldSetters: Record<EditableField, (value: string) => void> = {
     name: setName,
     email: setEmail,
@@ -30,6 +32,7 @@ export function useRegisterProfile() {
     confirmPassword: setConfirmPassword,
   }
 
+  /* Função para mudar o valor de um campo */
     function onFieldChange(field: EditableField, value: string) {
         fieldSetters[field]?.(value)
         if (fieldErrors[field]) {

@@ -15,6 +15,14 @@ type LoginProfileFormProps = {
   onSubmit: FormEventHandler<HTMLFormElement>
 }
 
+/* Função para mudar o valor de um campo */
+function fieldChange(
+  onFieldChange: (field: LoginField, value: string) => void,
+  field: LoginField,
+) {
+  return (value: string) => onFieldChange(field, value)
+}
+
 /* Componente de formulario de login */
 export default function LoginProfileForm({
   email,
@@ -36,7 +44,7 @@ export default function LoginProfileForm({
         name="email"
         autoComplete="email"
         value={email}
-        onValueChange={(value) => onFieldChange('email', value)}
+        onValueChange={fieldChange(onFieldChange, 'email')}
         error={fieldErrors.email}
         placeholder="user@provider.com"
       />
@@ -49,7 +57,7 @@ export default function LoginProfileForm({
         name="password"
         autoComplete="current-password"
         value={password}
-        onValueChange={(value) => onFieldChange('password', value)}
+        onValueChange={fieldChange(onFieldChange, 'password')}
         error={fieldErrors.password}
         placeholder="••••••"
       />

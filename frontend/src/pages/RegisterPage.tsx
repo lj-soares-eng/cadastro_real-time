@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import RegisterProfileForm from '../components/RegisterProfileForm'
+import ProfileForm from '../components/ProfileForm'
 import { useRegisterProfile } from '../validation/useRegisterProfile'
 import AlertMessage from '../components/AlertMessage'
+import { registerProfileFields } from '../validation/formVariantConfig'
 
 /* Pagina de registro */
 export default function RegisterPage() {
@@ -29,20 +30,24 @@ export default function RegisterPage() {
 
         {/* Mensagem de sucesso */}
         {successMessage ? (
-        <AlertMessage variant="success">
-          {successMessage}{' '}
-              <Link className="auth-link" to="/login">
-                Ir para o login
-              </Link>
-            </AlertMessage>
+          <AlertMessage variant="success">
+            {successMessage}{' '}
+                <Link className="auth-link" to="/login">
+                  Ir para o login
+                </Link>
+              </AlertMessage>
           ) : null}
 
         {/* Mensagem de erro */}
         {formError ? (
-        <AlertMessage variant="error">{formError}</AlertMessage>
+          <AlertMessage variant="error">
+            {formError}
+              </AlertMessage>
             ) : null}
-            
-        <RegisterProfileForm 
+
+        {/* Formulario de registro de perfil */}
+        <ProfileForm 
+        fields={registerProfileFields}
         name={name} 
         email={email} 
         password={password} 

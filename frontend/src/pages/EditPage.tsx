@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import AlertMessage from '../components/AlertMessage'
-import EditProfileForm from '../components/EditProfileForm'
 import { useEditProfileForm } from '../validation/useEditProfile'
+import ProfileForm from '../components/ProfileForm'
+import { editProfileFields } from '../validation/formVariantConfig'
 
-/* Componente EditPage */
+/* Pagina de edicao de perfil */
 export default function EditPage() {
+  /* Hook para o formulario de edicao de perfil */
   const {
     loading,
     name,
@@ -19,6 +21,7 @@ export default function EditPage() {
     handleSubmit,
   } = useEditProfileForm()
 
+  /* Renderizacao do componente */
   if (loading) {
     return (
       <div className="auth-shell">
@@ -42,13 +45,20 @@ export default function EditPage() {
         
         {/* Mensagem de sucesso */}
         {successMessage ? (
-          <AlertMessage variant="success">{successMessage}</AlertMessage>
+          <AlertMessage variant="success">
+            {successMessage}
+              </AlertMessage>
         ) : null}
+
         {/* Mensagem de erro */}
-        {formError ? <AlertMessage variant="error">{formError}</AlertMessage> : null}
+        {formError ? (
+          <AlertMessage variant="error">
+            {formError}
+              </AlertMessage>
+            ) : null}
 
         {/* Formulario de edicao de perfil */}
-        <EditProfileForm
+        <ProfileForm fields={editProfileFields}
           name={name}
           email={email}
           password={password}

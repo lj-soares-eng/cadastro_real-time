@@ -1,10 +1,12 @@
 import type { FormEventHandler } from 'react'
 import AuthTextField from './AuthTextField'
-import { type FieldErrors } from '../validation/profileForm'
+import type { FieldErrors } from '../validation/profileForm'
 import { NAME_MAX } from '../validation/validators'
+import type { FormFieldsConfig } from '../validation/formVariantConfig'
 
-/* Tipo de dado para as props do componente EditProfileForm */
-type EditProfileFormProps = {
+/* Tipo de dado para as propriedades do componente ProfileForm */
+type ProfileFormProps = {
+  fields: FormFieldsConfig
   name: string
   email: string
   password: string
@@ -18,8 +20,20 @@ type EditProfileFormProps = {
   onSubmit: FormEventHandler<HTMLFormElement>
 }
 
-/* Componente EditProfileForm */
-export default function EditProfileForm({
+/* Tipo de dado para os campos do formulário */
+type ProfileField = 'name' | 'email' | 'password' | 'confirmPassword'
+
+/* Função para mudar o valor de um campo */
+function fieldChange(
+  onFieldChange: (field: ProfileField, value: string) => void,
+  field: ProfileField,
+) {
+  return (value: string) => onFieldChange(field, value)
+}
+
+/* Componente ProfileForm */
+export default function ProfileForm({
+  fields,
   name,
   email,
   password,
@@ -28,19 +42,17 @@ export default function EditProfileForm({
   isSubmitting,
   onFieldChange,
   onSubmit,
-}: EditProfileFormProps) {
-  
-  /* Retorno do componente */
+}: ProfileFormProps) {
   return (
     <form className="auth-form" onSubmit={onSubmit} noValidate>
-      {/* Campo de nome */}
+        {/* Campo de nome */}
       <AuthTextField
-        id="edit-name"
+        id={fields.idName}
         label="Nome"
         name="name"
         autoComplete="name"
         value={name}
-        onValueChange={(value) => onFieldChange('name', value)}
+        onValueChange={fieldChange(onFieldChange, 'name')}
         error={fieldErrors.name}
         placeholder="Seu nome"
         maxLength={NAME_MAX + 10}
@@ -48,50 +60,50 @@ export default function EditProfileForm({
 
       {/* Campo de e-mail */}
       <AuthTextField
-        id="edit-email"
+        id={fields.idEmail}
         label="E-mail"
         type="email"
         name="email"
         autoComplete="email"
         value={email}
-        onValueChange={(value) => onFieldChange('email', value)}
+        onValueChange={fieldChange(onFieldChange, 'email')}
         error={fieldErrors.email}
         placeholder="user@provider.com"
       />
 
-      {/* Campo de nova senha */}
+      {/* Campo de senha */}
       <AuthTextField
-        id="edit-password"
-        label="Nova senha (opcional)"
+        id={fields.idPassword}
+        label={fields.labelPassword}
         type="password"
         name="password"
         autoComplete="new-password"
         value={password}
-        onValueChange={(value) => onFieldChange('password', value)}
+        onValueChange={fieldChange(onFieldChange, 'password')}
         error={fieldErrors.password}
-        placeholder="Deixe em branco para manter"
+        placeholder={fields.placeholderPassword}
       />
 
-      {/* Campo de confirmar nova senha */}
+      {/* Campo de confirmação de senha */}
       <AuthTextField
-        id="edit-confirm"
-        label="Confirmar nova senha"
+        id={fields.idConfirm}
+        label={fields.labelConfirm}
         type="password"
         name="confirmPassword"
         autoComplete="new-password"
         value={confirmPassword}
-        onValueChange={(value) => onFieldChange('confirmPassword', value)}
+        onValueChange={fieldChange(onFieldChange, 'confirmPassword')}
         error={fieldErrors.confirmPassword}
-        placeholder="Repita a nova senha"
+        placeholder={fields.placeholderConfirm}
       />
-
-      {/* Botao de salvar alterações */}
+      
+      {/* Botão de envio */}
       <button
         className="btn-primary is-disabled"
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Salvando…' : 'Salvar alterações'}
+        {isSubmitting ? fields.submitBusy : fields.submitIdle}
       </button>
     </form>
   )

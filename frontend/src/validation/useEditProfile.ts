@@ -34,6 +34,8 @@ export function useEditProfileForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   /* Estado para o envio do formulário */
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  /* Função para mudar o valor de um campo */
   const fieldSetters: Record<EditableField, (value: string) => void> = {
     name: setName,
     email: setEmail,
@@ -41,48 +43,9 @@ export function useEditProfileForm() {
     confirmPassword: setConfirmPassword,
   }
 
-  /* Efeito para buscar o usuário logado */
-  useEffect(() => {
-    let cancelled = false
-
-    /* Busca o usuário logado */
-    void fetchMe()
-      .then((user) => {
-        /* Se o usuário foi cancelado, retorna */
-        if (cancelled) {
-          return
-        }
-        /* Define o id do usuário */
-        setUserId(user.id)
-        /* Define o nome do usuário */
-        setName(user.name)
-        /* Define o e-mail do usuário */
-        setEmail(user.email)
-      })
-      .catch(() => {
-        /* Se o usuário foi cancelado, redireciona para a página de login */
-        if (!cancelled) {
-          navigate('/login', { replace: true })
-        }
-      })
-      .finally(() => {
-        /* Se o usuário foi cancelado, define o carregamento como false */
-        if (!cancelled) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [navigate])
-
   /* Função para mudar o valor de um campo */
   function onFieldChange(field: EditableField, value: string) {
-    /* Switch para mudar o valor de um campo */
     fieldSetters[field]?.(value)
-
-    /* Se o campo tem erro, limpa o erro */
     if (fieldErrors[field]) {
       setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
     }
@@ -92,7 +55,6 @@ export function useEditProfileForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setFormError(null)
-    /* Limpa a mensagem de sucesso */
     setSuccessMessage(null)
 
     /* Valida o formulário */
@@ -137,6 +99,44 @@ export function useEditProfileForm() {
         setIsSubmitting(false)
       })
   }
+
+  /* Efeito para buscar o usuário logado */
+  useEffect(() => {
+    let cancelled = false
+
+    /* Busca o usuário logado */
+    void fetchMe()
+      .then((user) => {
+        /* Se o usuário foi cancelado, retorna */
+        if (cancelled) {
+          return
+        }
+        /* Define o id do usuário */
+        setUserId(user.id)
+        /* Define o nome do usuário */
+        setName(user.name)
+        /* Define o e-mail do usuário */
+        setEmail(user.email)
+      })
+      .catch(() => {
+        /* Se o usuário foi cancelado, redireciona para a página de login */
+        if (!cancelled) {
+          navigate('/login', { replace: true })
+        }
+      })
+      .finally(() => {
+        /* Se o usuário foi cancelado, define o carregamento como false */
+        if (!cancelled) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [navigate])
+
+
 
   return {
     loading,

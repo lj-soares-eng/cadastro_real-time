@@ -1,26 +1,17 @@
-import AuthTextField from './AuthTextField'
-import { type LoginFieldErrors } from '../validation/profileForm'
-import type { FormEventHandler } from 'react'
 
-/* Tipo de campo de login */
-type LoginField = 'email' | 'password'
+import { type LoginFieldErrors } from '../validation/profileForm'
+import AuthEmailPasswordFields from './AuthEmailPasswordFields'
+import { loginProfileConfig } from '../validation/formVariantConfig'
+import type { FormEventHandler } from 'react'
 
 /* Tipo de props do formulario de login */
 type LoginProfileFormProps = {
   email: string
   password: string
   fieldErrors: LoginFieldErrors
+  onFieldChange: (field: 'email' | 'password', value: string) => void 
   isSubmitting: boolean
-  onFieldChange: (field: LoginField, value: string) => void
   onSubmit: FormEventHandler<HTMLFormElement>
-}
-
-/* Função para mudar o valor de um campo */
-function fieldChange(
-  onFieldChange: (field: LoginField, value: string) => void,
-  field: LoginField,
-) {
-  return (value: string) => onFieldChange(field, value)
 }
 
 /* Componente de formulario de login */
@@ -28,38 +19,22 @@ export default function LoginProfileForm({
   email,
   password,
   fieldErrors,
-  isSubmitting,
   onFieldChange,
+  isSubmitting,
   onSubmit,
 }: LoginProfileFormProps) {
 
   /* Retorno do componente */
   return (
     <form className="auth-form" onSubmit={onSubmit} noValidate>
-      {/* Campo de e-mail */}
-      <AuthTextField
-        id="login-email"
-        label="E-mail"
-        type="email"
-        name="email"
-        autoComplete="email"
-        value={email}
-        onValueChange={fieldChange(onFieldChange, 'email')}
-        error={fieldErrors.email}
-        placeholder="user@provider.com"
-      />
-
-      {/* Campo de senha */}
-      <AuthTextField
-        id="login-password"
-        label="Senha"
-        type="password"
-        name="password"
-        autoComplete="current-password"
-        value={password}
-        onValueChange={fieldChange(onFieldChange, 'password')}
-        error={fieldErrors.password}
-        placeholder="••••••"
+      
+      {/* Campos de e-mail e senha */}
+      <AuthEmailPasswordFields
+        email={email}
+        password={password}
+        fieldErrors={fieldErrors}
+        config={loginProfileConfig}
+        onFieldChange={onFieldChange}
       />
 
       {/* Botao de login */}

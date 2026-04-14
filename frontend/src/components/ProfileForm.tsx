@@ -3,6 +3,7 @@ import AuthTextField from './AuthTextField'
 import type { FieldErrors } from '../validation/profileForm'
 import { NAME_MAX } from '../validation/validators'
 import type { FormFieldsConfig } from '../validation/formVariantConfig'
+import AuthEmailPasswordFields from './AuthEmailPasswordFields'
 
 /* Tipo de dado para as propriedades do componente ProfileForm */
 type ProfileFormProps = {
@@ -31,8 +32,8 @@ function fieldChange(
   return (value: string) => onFieldChange(field, value)
 }
 
-/* Componente ProfileForm */
-export default function ProfileForm({
+/* Componente de formulario de perfil */
+  export default function ProfileForm({
   fields,
   name,
   email,
@@ -58,30 +59,12 @@ export default function ProfileForm({
         maxLength={NAME_MAX + 10}
       />
 
-      {/* Campo de e-mail */}
-      <AuthTextField
-        id={fields.idEmail}
-        label="E-mail"
-        type="email"
-        name="email"
-        autoComplete="email"
-        value={email}
-        onValueChange={fieldChange(onFieldChange, 'email')}
-        error={fieldErrors.email}
-        placeholder="user@provider.com"
-      />
-
-      {/* Campo de senha */}
-      <AuthTextField
-        id={fields.idPassword}
-        label={fields.labelPassword}
-        type="password"
-        name="password"
-        autoComplete="new-password"
-        value={password}
-        onValueChange={fieldChange(onFieldChange, 'password')}
-        error={fieldErrors.password}
-        placeholder={fields.placeholderPassword}
+      <AuthEmailPasswordFields
+        email={email}
+        password={password}
+        fieldErrors={fieldErrors}
+        config={fields}
+        onFieldChange={onFieldChange}
       />
 
       {/* Campo de confirmação de senha */}

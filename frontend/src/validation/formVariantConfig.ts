@@ -3,6 +3,7 @@ export const loginProfileConfig = {
   idPassword: 'login-password',
   labelPassword: 'Senha',
   placeholderPassword: '••••••',
+  passwordAutoComplete: 'current-password',
 } as const
 
 export const registerProfileConfig = {
@@ -10,6 +11,7 @@ export const registerProfileConfig = {
   idPassword: 'register-password',
   labelPassword: 'Senha',
   placeholderPassword: 'Mínimo 6 caracteres',
+  passwordAutoComplete: 'new-password',
 } as const
 
 export const editProfileConfig = {
@@ -17,6 +19,7 @@ export const editProfileConfig = {
   idPassword: 'edit-password',
   labelPassword: 'Nova senha (opcional)',
   placeholderPassword: 'Deixe em branco para manter',
+  passwordAutoComplete: 'new-password',
 } as const
 
 export type LoginProfileConfig = 

@@ -5,7 +5,7 @@ import { updateUser } from '../api/users'
 import {
   type FieldErrors,
   validateProfileForm,
-} from './profileForm'
+} from '../validation/profileForm'
 
 /* Tipo de dado para os campos editaveis */
 type EditableField = 'name' | 'email' | 'password' | 'confirmPassword'

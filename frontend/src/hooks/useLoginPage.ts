@@ -4,7 +4,7 @@ import { loginRequest } from '../api/auth'
 import {
   type LoginFieldErrors,
   validateLoginForm,
-} from './profileForm'
+} from '../validation/profileForm'
 
 type LoginField = 'email' | 'password'
 

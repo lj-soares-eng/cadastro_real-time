@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import LoginProfileForm from '../components/LoginProfileForm'
 import AlertMessage from '../components/AlertMessage'
-import { useLoginPage } from '../validation/useLoginPage'
+import { useLoginPage } from '../hooks/useLoginPage'
 
 /* Pagina de login */
 export default function LoginPage() {

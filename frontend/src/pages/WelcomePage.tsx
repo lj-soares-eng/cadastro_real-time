@@ -1,5 +1,5 @@
 import AlertMessage from '../components/AlertMessage'
-import { useWelcomePage } from '../validation/useWelcomePage'
+import { useWelcomePage } from '../hooks/useWelcomePage'
 
 /* Pagina de boas vindas */
 export default function WelcomePage() {

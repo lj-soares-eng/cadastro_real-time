@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import AlertMessage from '../components/AlertMessage'
-import { useEditProfileForm } from '../validation/useEditProfile'
+import { useEditProfileForm } from '../hooks/useEditProfile'
 import ProfileForm from '../components/ProfileForm'
 import { editProfileFields } from '../validation/formVariantConfig'
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ProfileForm from '../components/ProfileForm'
-import { useRegisterProfile } from '../validation/useRegisterProfile'
+import { useRegisterProfile } from '../hooks/useRegisterProfile'
 import AlertMessage from '../components/AlertMessage'
 import { registerProfileFields } from '../validation/formVariantConfig'
 

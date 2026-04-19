@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react"
-import { type FieldErrors, validateProfileForm } from "./profileForm"
+import { type FieldErrors, validateProfileForm } from "../validation/profileForm"
 import { registerUser } from "../api/users"
 
 /* Tipo de dado para os campos editaveis */

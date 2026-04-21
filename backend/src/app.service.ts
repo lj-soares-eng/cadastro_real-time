@@ -20,11 +20,11 @@ export class AppService {
               display: flex;
               align-items: center;      /* centraliza vertical */
               justify-content: center;  /* centraliza horizontal */
-              background: #0f172a;
+              background:rgb(150, 168, 214);
               font-family: Arial, sans-serif;
             }
             h1 {
-              color: #22c55e;          /* cor do texto */
+              color:rgb(0, 0, 0);          /* cor do texto */
               font-size: 48px;         /* tamanho da fonte */
               margin: 0;
             }

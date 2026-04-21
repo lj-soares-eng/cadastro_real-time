@@ -36,6 +36,37 @@ cadastro/
 └── README.md
 ```
 
+## Estrutura do projeto (plaintext)
+
+```text
+cadastro/
+├── backend/                     # API NestJS + Prisma + testes
+│   ├── src/
+│   │   ├── auth/               # login, JWT, guards e sessoes
+│   │   ├── users/              # CRUD de usuarios
+│   │   ├── admin/              # metricas em tempo real (socket)
+│   │   └── main.ts             # bootstrap da API
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   ├── migrations/
+│   │   └── seed.ts
+│   ├── test/                   # testes e2e
+│   ├── .env                    # variaveis de ambiente do backend
+│   └── package.json
+├── frontend/                    # aplicacao React + Vite
+│   ├── src/
+│   │   ├── pages/              # Login, Register, Welcome, Admin, Edit
+│   │   ├── components/         # componentes reutilizaveis
+│   │   ├── hooks/              # hooks de regras de pagina
+│   │   ├── api/                # client HTTP e funcoes de API
+│   │   └── utils/              # utilitarios de frontend
+│   ├── public/
+│   ├── .env                    # variaveis de ambiente do frontend
+│   └── package.json
+├── app.sh                       # script para abrir backend e frontend
+└── README.md
+```
+
 ## Setup do projeto
 
 ```bash

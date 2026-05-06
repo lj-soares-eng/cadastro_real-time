@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchMe, logoutRequest, type UserRole } from '../api/auth'
-import { deleteUser } from '../api/users'
+import { deleteUser, updateUser } from '../api/users'
 
 /* Hook para estado e ações dos botões da página de boas-vindas */
 export function useWelcomePage() {
@@ -12,6 +12,7 @@ export function useWelcomePage() {
   const [formError, setFormError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isTogglingRole, setIsTogglingRole] = useState(false)
 
   /* Efeito para buscar o usuário logado */
   useEffect(() => {
@@ -59,6 +60,32 @@ export function useWelcomePage() {
     navigate('/profile/edit')
   }, [navigate])
 
+  /* Função para alternar o role do usuário entre USER e ADMIN */
+  const handleToggleRole = useCallback(() => {
+    if (userId === null || userRole === null || isTogglingRole) {
+      return
+    }
+
+    const nextRole: UserRole = userRole === 'USER' ? 'ADMIN' : 'USER'
+
+    setFormError(null)
+    setIsTogglingRole(true)
+    void updateUser(userId, { role: nextRole })
+      .then((updatedUser) => {
+        setUserRole(updatedUser.role)
+      })
+      .catch((err: unknown) => {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Não foi possível alterar o status do usuário.'
+        setFormError(message)
+      })
+      .finally(() => {
+        setIsTogglingRole(false)
+      })
+  }, [userId, userRole, isTogglingRole])
+
   /* Função para deletar a conta */
   const handleDeleteAccount = useCallback(() => {
     if (userId === null || isDeleting) {
@@ -97,7 +124,9 @@ export function useWelcomePage() {
     userRole,
     formError,
     isDeleting,
+    isTogglingRole,
     handleLogout,
+    handleToggleRole,
     handleDeleteAccount,
     goToAdmin,
     goToEditProfile,

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtSecret } from '../auth.constants';
 import { extractAccessToken } from '../token.util';
+import { PrismaService } from '../../prisma.service';
 
 /* Tipo de dado para o payload do token de acesso */
 export type AccessTokenPayload = {
@@ -20,7 +21,7 @@ export type AccessTokenPayload = {
 @Injectable()
 /* Estrategia de autenticacao JWT */
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor() {
+  constructor(private readonly prisma: PrismaService) {
     /* Configura a estrategia */
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -32,13 +33,26 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   /* Funcao para validar o payload do token de acesso */
-  validate(payload: AccessTokenPayload) {
-    /* Retorna o payload */
+  async validate(payload: AccessTokenPayload) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: payload.sub },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
     return {
-      userId: payload.sub,
-      email: payload.email,
-      name: payload.name,
-      role: payload.role ?? Role.USER,
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role ?? payload.role ?? Role.USER,
       jti: payload.jti,
       exp: payload.exp,
     };

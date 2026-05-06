@@ -10,7 +10,9 @@ export default function WelcomePage() {
     userRole,
     formError,
     isDeleting,
+    isTogglingRole,
     handleLogout,
+    handleToggleRole,
     handleDeleteAccount,
     goToAdmin,
     goToEditProfile,
@@ -58,6 +60,19 @@ export default function WelcomePage() {
             type="button"
           >
             Editar perfil
+          </button>
+
+          <button
+            className="btn-muted is-disabled"
+            onClick={handleToggleRole}
+            type="button"
+            disabled={isTogglingRole}
+          >
+            {isTogglingRole
+              ? 'Alterando status...'
+              : userRole === 'USER'
+                ? 'Virar ADMIN'
+                : 'Virar USER'}
           </button>
 
           {/* Botao de deletar conta */}

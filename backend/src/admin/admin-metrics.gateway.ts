@@ -15,16 +15,27 @@ import { SystemMetricsService } from './system-metrics.service';
 /* Intervalo de atualização das métricas */
 const METRICS_INTERVAL_MS = 1000;
 
-/* Função para obter a origem do CORS */
-function adminCorsOrigin(): string {
-  return process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173';
+/* Função para obter as origens permitidas do CORS */
+function adminCorsOrigins(): string[] {
+  const raw = process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173';
+  return raw
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 }
 
 /* Gateway de métricas de administração */
 @WebSocketGateway({
   namespace: '/admin',
   cors: {
-    origin: adminCorsOrigin(),
+    origin: (origin, callback) => {
+      const allowedOrigins = adminCorsOrigins();
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`Origin ${origin} not allowed by admin websocket`));
+    },
     credentials: true,
   },
 })
